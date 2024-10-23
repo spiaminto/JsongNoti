@@ -1,0 +1,98 @@
+// reference = https://docs.spring.io/spring-cloud-function/reference/adapters/aws-intro.html
+// 이 빌드의 shadow/shaowJar 를 통해 빌드 가능. 콘솔 환경변수 Main 클래스 지정 필수
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'org.springframework.boot.experimental.thin-launcher' version "1.0.31.RELEASE"
+}
+
+group = 'io.spiaminto'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+shadowJar.mustRunAfter thinJar
+
+assemble.dependsOn = [thinJar, shadowJar]
+import com.github.jengelman.gradle.plugins.shadow.transformers.*
+
+shadowJar {
+    archiveClassifier = 'aws'
+    manifest {
+        inheritFrom(project.tasks.thinJar.manifest)
+    }
+    // Required for Spring
+    mergeServiceFiles()
+    append 'META-INF/spring.handlers'
+    append 'META-INF/spring.schemas'
+    append 'META-INF/spring.tooling'
+    append 'META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports'
+    append 'META-INF/spring/org.springframework.boot.actuate.autoconfigure.web.ManagementContextConfiguration.imports'
+    transform(PropertiesFileTransformer) {
+        paths = ['META-INF/spring.factories']
+        mergeStrategy = "append"
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Jsoup
+    implementation 'org.jsoup:jsoup:1.18.1'
+
+    // AWS lambda core
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
+
+    // postgres driver
+    implementation 'org.postgresql:postgresql:42.7.4'
+
+    // Spring boot starter mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // thymleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-function-adapter-aws
+    implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:4.1.2'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+//lambda build to /build/distributions
+task lambdaZip(type: Zip) {
+    into('lib') {
+        from(jar)
+        from(configurations.runtimeClasspath)
+    }
+}

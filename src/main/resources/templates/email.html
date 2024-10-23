@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f7f7f7;
+          color: #333;
+      }
+      .container {
+          width: 100%;
+          max-width: 600px;
+          margin: 0 auto;
+          background-color: #fff7f2;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      a {
+          color: #111111;
+          text-decoration: none;
+      }
+      h1 {
+          text-align: center;
+          color: #f95001;
+      }
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+      }
+      th, td {
+          border: 1px solid #aaaaaa;
+          text-align: left;
+          padding: 8px;
+      }
+      th {
+          background-color: #f95001;
+          color: white;
+      }
+      tr:hover {
+          background-color: #f2f2f2;
+      }
+
+      .song-number {
+          font-size: 0.9rem;
+          width: 10%;
+      }
+
+      .song-title {
+          width: 65%;
+      }
+
+      .singer {
+          width: 25%;
+      }
+
+      .song-info-text {
+          font-size: 0.8rem;
+          color: #666;
+          text-indent: 0.5rem;
+      }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>TJ 노래방 신곡 알림</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>가수</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="song : ${songs}">
+      <td class="song-number" th:text="${song.number}">61111</td>
+      <td class="song-title">
+        <div class="song-title-text">
+          <a th:href="${song.searchUrl}" href="https://www.google.com/search?q=%EC%82%AC%EB%9E%91%EC%9D%98+%EB%B6%88%EC%8B%9C%EC%B0%A9"
+          th:text="${song.title}">
+            노래 제목
+          </a>
+        </div>
+        <div class="song-info-text" th:text="${song.info}">추가설명</div>
+      </td>
+      <td class="singer" th:text="${song.singer}">가수명</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

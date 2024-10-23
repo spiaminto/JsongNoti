@@ -1,0 +1,73 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'io.spiaminto'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation ('org.springframework.boot:spring-boot-starter-test'){
+        exclude group: "com.vaadin.external.google", module:"android-json"
+    }
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // JPA
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // Jsoup
+    implementation 'org.jsoup:jsoup:1.18.1'
+
+    // AWS lambda core
+//    implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
+
+    // postgres driver
+    implementation 'org.postgresql:postgresql:42.7.4'
+
+    // Spring boot starter mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // thymleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-function-adapter-aws
+    implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:4.1.2'
+
+}
+
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+version = '1.0.1'
+//lambda build to /build/distributions
+task lambdaZip(type: Zip) {
+    into('lib') {
+        from(jar)
+        from(configurations.runtimeClasspath)
+    }
+    archiveFileName = "JsongNoti_Lambda-${project.version}.zip"
+}
