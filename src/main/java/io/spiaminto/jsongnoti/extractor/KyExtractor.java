@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +63,7 @@ public class KyExtractor {
                     .singer(singer)
                     .writer(writer)
                     .composer(composer)
+                    .regDate(LocalDate.now())
                     .build();
 
             songs.add(song);

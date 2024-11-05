@@ -14,6 +14,8 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,6 +35,7 @@ public class GmailSender {
 
     /**
      * html 형식으로 메일 전송
+     *
      * @param users
      * @param songs
      */
@@ -64,16 +67,12 @@ public class GmailSender {
         }
 
         // 메일 전송
-        try {
-            javaMailSender.send(preparatories.toArray(new MimeMessagePreparator[0]));
-        } catch (Exception e) {
-            log.error("메일 전송 실패 e = {}, message = {}",e.getClass().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        javaMailSender.send(preparatories.toArray(new MimeMessagePreparator[0]));
     }
 
     /**
      * 이메일 맨 위에 표시될 텍스트 생성
+     *
      * @return
      */
     public String getHeaderText() {
@@ -91,10 +90,57 @@ public class GmailSender {
 
     /**
      * 메일 제목 생성
+     *
      * @return
      */
     public String getSubject() {
-        return "신곡 알림 도착";
+        return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + " 신곡 알림 도착";
+    }
+
+    // 개발용 에러 메일 전송 ===========================================================
+
+    /**
+     * 에러메일 나한테 전송
+     *
+     * @param message 에러메시지
+     */
+    public void sendError(String message) {
+        String subject = getErrorSubject();
+        String content = getErrorContent(message);
+        String to = "jsongnoti+error@gmail.com";
+
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(to);
+        mail.setFrom(from);
+        mail.setSubject(subject);
+        mail.setText(content);
+
+        try { // 여기는 에러나면 잡아야됨
+            javaMailSender.send(mail);
+        } catch (Exception e) {
+            log.error("에러 메일 전송 실패 e = {}, message = {}", e.getClass().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 에러메일 제목 생성
+     * @return
+     */
+    public String getErrorSubject() {
+        return "JsongNoti lambda 에러 발생 " + LocalDateTime.now();
+    }
+
+    /**
+     * 메일 내용 생성
+     * @param message 에러메시지
+     * @return
+     */
+    public String getErrorContent(String message) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\n")
+                .append(message);
+        return sb.toString();
     }
 
 
@@ -102,6 +148,7 @@ public class GmailSender {
 
     /**
      * 일반 텍스트 형식으로 메일 전송
+     *
      * @param users
      * @param songs
      */
@@ -124,13 +171,14 @@ public class GmailSender {
         try {
             javaMailSender.send(messages.toArray(new SimpleMailMessage[0]));
         } catch (Exception e) {
-            log.error("메일 전송 실패 e = {}, message = {}",e.getClass().getName(), e.getMessage());
+            log.error("메일 전송 실패 e = {}, message = {}", e.getClass().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
 
     /**
      * 메일 내용 생성
+     *
      * @param songs
      * @return
      */
@@ -168,6 +216,7 @@ public class GmailSender {
 
     /**
      * 받는 사람 이메일 목록 생성
+     *
      * @param users
      * @return
      */

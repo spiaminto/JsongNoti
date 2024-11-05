@@ -39,8 +39,11 @@ dependencies {
     // Jsoup
     implementation 'org.jsoup:jsoup:1.18.1'
 
-    // AWS lambda core
+    // AWS lambda core - 어댑터로 대체
 //    implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
+
+    // 스프링 클라우드 function aws lambda 어댑터
+    implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:4.1.2'
 
     // postgres driver
     implementation 'org.postgresql:postgresql:42.7.4'
@@ -51,9 +54,6 @@ dependencies {
     // thymleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
-    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-function-adapter-aws
-    implementation 'org.springframework.cloud:spring-cloud-function-adapter-aws:4.1.2'
-
 }
 
 
@@ -62,7 +62,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-version = '1.0.1'
+version = '1.0.2'
 //lambda build to /build/distributions
 task lambdaZip(type: Zip) {
     into('lib') {

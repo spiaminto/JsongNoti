@@ -9,6 +9,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -47,6 +48,7 @@ public class TjExtractor {
                     .singer(songSinger)
                     .writer(songWriter)
                     .composer(songComposer)
+                    .regDate(LocalDate.now())
                     .build();
 
 //            log.info("song = {}", song);

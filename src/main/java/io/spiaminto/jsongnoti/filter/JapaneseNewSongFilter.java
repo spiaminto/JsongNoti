@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -83,15 +84,14 @@ public class JapaneseNewSongFilter {
      * @return
      */
     protected List<Song> newSongFilter(List<Song> songs) {
-        // DB 에서 이번달 곡 조회
-        int thisMonth = LocalDateTime.now().getMonth().getValue();
-        int thisYear = LocalDateTime.now().getYear();
-        LocalDateTime thisMonthStartTime = LocalDateTime.of(thisYear, thisMonth, 1, 0, 0, 0);
-        List<Song> thisMonthSongs = songRepository.findSongsByBrandAndTimeAfter(songs.get(0).getBrand(), thisMonthStartTime);
+        // DB 에서 이번달 + 저번달 곡 조회 (이번달만 조회하면 이번달 신곡이 없을시 저번달 신곡을 거를수 없음)
+        LocalDate lastMonthStartTime = LocalDate.now().withDayOfMonth(1).minusMonths(1);
+        List<Song> savedSongs = songRepository.findSongsByBrandAndTimeAfter(songs.get(0).getBrand(), lastMonthStartTime);
+        // savedSongs 가 비어있을 경우 IndexOutOfBoundsException 발생 (문제상황이 맞기때문에 따로 잡진 않음)
 
         // 이미 DB 에 저장된 곡 제거
         List<Song> newSongs = songs.stream()
-                .filter(song -> thisMonthSongs.stream()
+                .filter(song -> savedSongs.stream()
                         .noneMatch(thisMonthSong -> thisMonthSong.getNumber() == song.getNumber()))
                 .toList();
         return newSongs;

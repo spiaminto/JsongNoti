@@ -16,6 +16,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static lombok.AccessLevel.*;
@@ -39,6 +40,8 @@ public class Song {
     private String singer;
     private String composer;
     private String writer;
+
+    private LocalDate regDate;
 
     @Builder.Default
     private boolean mailed = false;
