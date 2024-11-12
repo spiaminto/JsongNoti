@@ -2,10 +2,9 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body style="font-family:Arial, sans-serif;margin:0;padding:0;background-color:#eeeeee;color:#333;">
-<div class="container" style="box-sizing:border-box;width:100%;max-width:600px;margin:0 auto;background-color:#fefefe;padding:5px;border-radius:8px;box-shadow:0 0 10px rgba(0, 0, 0, 0.1);">
+<body style="font-family:Arial, sans-serif;margin:0;padding:0;color:#333;">
+<div class="container" style="box-sizing:border-box;width:100%;max-width:600px;margin:0 auto;padding:5px;border-radius:8px;box-shadow:0 0 10px rgba(0, 0, 0, 0.1);">
   <div style="" th:text="${headerText}">알림이 도착했습니다.&#10;&#13;</div>
   <h1 style="text-align:center;" th:styleappend="${brandName.equals('TJ') ? 'color:#f95001;' : 'color:#6495ed;'}"
       th:text="${brandName + ' 노래방 신곡 목록'}">노래방 신곡 목록</h1>
@@ -22,7 +21,7 @@
       <td class="song-number" th:text="${song.number}" style="border:1px solid #aaaaaa;text-align:left;padding:8px;font-size:14px;width:8%;">12345</td>
       <td class="song-title" style="border:1px solid #aaaaaa;text-align:left;padding:8px;width:67%;">
         <div class="song-title-text">
-          <a th:href="${song.searchUrl}" href="https://www.google.com/search?q=%EC%82%AC%EB%9E%91%EC%9D%98+%EB%B6%88%EC%8B%9C%EC%B0%A9" th:text="${song.title}" style="font-size:17px;color:#111111;font-weight:bold;text-decoration:none;">
+          <a th:href="${song.searchUrl}" href="https://www.google.com/search?q=%EC%82%AC%EB%9E%91%EC%9D%98+%EB%B6%88%EC%8B%9C%EC%B0%A9" th:text="${song.title}" style="font-size:17px;color:#111111;font-weight:bold;text-decoration:none;" target="_blank">
             &#45432;&#47000; &#51228;&#47785;
           </a>
         </div>
@@ -32,6 +31,9 @@
     </tr>
     </tbody>
   </table>
+  <div style="margin-top: 30px">
+    신곡 알림이 홈페이지로 <a href="https://jsongnoti.com" target="_blank">이동하기</a>
+  </div>
 </div>
 </body>
 </html>

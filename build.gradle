@@ -62,7 +62,7 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
-version = '1.0.2'
+version = '1.0.3'
 //lambda build to /build/distributions
 task lambdaZip(type: Zip) {
     into('lib') {
