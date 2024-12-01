@@ -33,6 +33,9 @@ public class GmailSender {
     @Value("${spring.mail.username}")
     private String from;
 
+    @Value("${current.profile}")
+    private String springProfile;
+
     /**
      * html 형식으로 메일 전송
      *
@@ -56,9 +59,9 @@ public class GmailSender {
             MimeMessagePreparator preparatory = mimeMessage -> { // callback 이므로 테스트는 메일을 보내거나 따로 떼어서 실행
                 MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
-                helper.setFrom(from);
+                helper.setFrom(from, "신곡 알림이");
                 helper.setTo(user.getEmail());
-                helper.setSubject(getSubject());
+                helper.setSubject(springProfile.equals("local") ? getTestSubject() : getSubject());
 
                 String content = templateEngine.process("inline-email", context);
                 helper.setText(content, true);
@@ -95,6 +98,10 @@ public class GmailSender {
      */
     public String getSubject() {
         return DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + " 신곡 알림 도착";
+    }
+
+    public String getTestSubject() {
+        return "(테스트) " + DateTimeFormatter.ofPattern("yyyy-MM-dd").format(LocalDate.now()) + " 신곡 알림 도착";
     }
 
     // 개발용 에러 메일 전송 ===========================================================

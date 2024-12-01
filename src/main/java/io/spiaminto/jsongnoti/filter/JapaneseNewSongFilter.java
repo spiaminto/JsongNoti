@@ -84,9 +84,10 @@ public class JapaneseNewSongFilter {
      * @return
      */
     protected List<Song> newSongFilter(List<Song> songs) {
-        // DB 에서 이번달 + 저번달 곡 조회 (이번달만 조회하면 이번달 신곡이 없을시 저번달 신곡을 거를수 없음)
-        LocalDate lastMonthStartTime = LocalDate.now().withDayOfMonth(1).minusMonths(1);
-        List<Song> savedSongs = songRepository.findSongsByBrandAndTimeAfter(songs.get(0).getBrand(), lastMonthStartTime);
+        // 저번달, 저저번달 두달치를 조회하기위해 (이번달 1일 minusMonths2 minusDays1) -> 금영의 경우 신곡란에 두 달치까지 잔존
+        LocalDate startTime = LocalDate.now().withDayOfMonth(1).minusMonths(2).minusDays(1);
+        List<Song> savedSongs = songRepository.findSongsByBrandAndTimeAfter(songs.get(0).getBrand(), startTime);
+        savedSongs.forEach(song -> log.info("savedSong = {}", song));
         // savedSongs 가 비어있을 경우 IndexOutOfBoundsException 발생 (문제상황이 맞기때문에 따로 잡진 않음)
 
         // 이미 DB 에 저장된 곡 제거

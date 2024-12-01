@@ -21,7 +21,7 @@
       <td class="song-number" th:text="${song.number}" style="border:1px solid #aaaaaa;text-align:left;padding:8px;font-size:14px;width:8%;">12345</td>
       <td class="song-title" style="border:1px solid #aaaaaa;text-align:left;padding:8px;width:67%;">
         <div class="song-title-text">
-          <a th:href="${song.searchUrl}" href="https://www.google.com/search?q=%EC%82%AC%EB%9E%91%EC%9D%98+%EB%B6%88%EC%8B%9C%EC%B0%A9" th:text="${song.title}" style="font-size:17px;color:#111111;font-weight:bold;text-decoration:none;" target="_blank">
+          <a th:href="${song.searchUrl}" href="https://www.google.com/search?q=%EC%82%AC%EB%9E%91%EC%9D%98+%EB%B6%88%EC%8B%9C%EC%B0%A9" th:text="${song.title}" style="font-size:17px;color:#111111;font-weight:bold;text-decoration:none;" target="_blank" rel="noreferrer">
             &#45432;&#47000; &#51228;&#47785;
           </a>
         </div>
@@ -31,8 +31,8 @@
     </tr>
     </tbody>
   </table>
-  <div style="margin-top: 30px">
-    신곡 알림이 홈페이지로 <a href="https://jsongnoti.com" target="_blank">이동하기</a>
+  <div style="margin-top: 30px;">
+    by Jsongnoti
   </div>
 </div>
 </body>

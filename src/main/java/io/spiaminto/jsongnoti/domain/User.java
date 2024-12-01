@@ -25,5 +25,12 @@ public class User {
     // 이메일 인증 및 탈퇴 인증 시 사용
     private String authenticationToken;
     private LocalDateTime authenticationTimestamp;
+    private int authenticationRetry; // 최대 3
+
+    public void clearAuth() {
+        this.authenticationToken = null;
+        this.authenticationTimestamp = null;
+        this.authenticationRetry = 0;
+    }
 
 }
