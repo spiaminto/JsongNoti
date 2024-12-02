@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -31,8 +33,13 @@ public class JapaneseNewSongFilter {
                 .filter(song -> songNumberFilter(song.getNumber(), song.getBrand()))
                 .toList();
 
-        // 이번달 신곡 필터링
-        List<Song> newSongs = newSongFilter(japaneseSongs);
+        // 신곡 필터링
+        List<Song> newSongs = new ArrayList<>();
+        if (japaneseSongs.isEmpty()) {
+            newSongs = Collections.emptyList(); // 없으면 빈 리스트
+        } else {
+            newSongs = newSongFilter(japaneseSongs);
+        }
 
         return newSongs;
     }
